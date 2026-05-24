@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jucenice440-collab | Developer Portfolio</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0f;
+      --surface: #14141f;
+      --text: #e8e8f0;
+      --muted: #8888a0;
+      --accent: #6c5ce7;
+      --accent-glow: #a29bfe;
+      --border: #222233;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .container {
+      display: flex; justify-content: space-between; align-items: center;
+      height: 56px;
+    }
+    nav a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    nav a:hover { color: var(--text); }
+    .logo { font-weight: 700; font-size: 18px; color: var(--text) !important; }
+
+    section { padding: 100px 0; }
+
+    #hero { padding-top: 180px; padding-bottom: 120px; }
+    #hero h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    #hero h1 span { background: linear-gradient(135deg, var(--accent), var(--accent-glow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    #hero p  { font-size: 1.15rem; color: var(--muted); max-width: 560px; margin-bottom: 32px; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 600;
+      text-decoration: none; cursor: pointer; transition: all 0.25s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #7c6df0; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(108,92,231,0.3); }
+    .btn-ghost { border: 1px solid var(--border); color: var(--text); }
+    .btn-ghost:hover { border-color: var(--accent); background: var(--surface); }
+
+    h2 { font-size: 2rem; font-weight: 700; margin-bottom: 12px; }
+    .section-desc { color: var(--muted); margin-bottom: 48px; font-size: 1.05rem; max-width: 520px; }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .skill-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 28px; transition: border-color 0.2s;
+    }
+    .skill-card:hover { border-color: var(--accent); }
+    .skill-card .icon { font-size: 28px; margin-bottom: 12px; }
+    .skill-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .skill-card p  { font-size: 0.9rem; color: var(--muted); }
+
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .project-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; transition: all 0.25s;
+    }
+    .project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .project-img {
+      height: 180px; display: flex; align-items: center; justify-content: center;
+      font-size: 48px; background: linear-gradient(135deg, #1a1a2e, #16213e);
+    }
+    .project-body { padding: 24px; }
+    .project-body h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .project-body p  { font-size: 0.88rem; color: var(--muted); margin-bottom: 12px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: 12px; padding: 4px 10px; border-radius: 99px; background: var(--bg); color: var(--accent-glow); border: 1px solid var(--border); }
+
+    .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .process-step { text-align: center; }
+    .process-step .num { font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 8px; }
+    .process-step h4 { font-size: 0.95rem; margin-bottom: 4px; }
+    .process-step p  { font-size: 0.82rem; color: var(--muted); }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; }
+    footer p { color: var(--muted); font-size: 0.85rem; }
+
+    a.mail { color: var(--accent-glow); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .process-grid { grid-template-columns: repeat(2, 1fr); }
+      section { padding: 64px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="#hero" class="logo">jucenice440-collab</a>
+    <div style="display:flex;gap:24px">
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#process">Process</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="container">
+    <h1>I build <span>websites, AI tools & automations</span> that make money</h1>
+    <p>Full-stack developer. AI-native. I turn ideas into working products — fast.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="#projects" class="btn btn-primary">See my work</a>
+      <a href="#contact" class="btn btn-ghost">Get in touch</a>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="container">
+    <h2>What I can build for you</h2>
+    <p class="section-desc">I don't just write code. I ship products that solve real problems.</p>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="icon">&#127760;</div>
+        <h3>Full-Stack Websites</h3>
+        <p>Modern, fast, responsive sites. Next.js, React, Tailwind. SEO optimized.</p>
+      </div>
+      <div class="skill-card">
+        <div class="icon">&#129302;</div>
+        <h3>AI-Powered Tools</h3>
+        <p>ChatGPT & Claude API integrations. Image generation, chatbots, content automation.</p>
+      </div>
+      <div class="skill-card">
+        <div class="icon">&#9881;&#65039;</div>
+        <h3>Browser Extensions</h3>
+        <p>Chrome & Edge plugins that boost productivity. Custom scrapers, analyzers, enhancers.</p>
+      </div>
+      <div class="skill-card">
+        <div class="icon">&#128200;</div>
+        <h3>E-Commerce Solutions</h3>
+        <p>Shopify apps, product page optimization, automated listing tools, AI product images.</p>
+      </div>
+      <div class="skill-card">
+        <div class="icon">&#128273;</div>
+        <h3>API Development</h3>
+        <p>RESTful & GraphQL APIs. Webhooks, payment integration, third-party service connectors.</p>
+      </div>
+      <div class="skill-card">
+        <div class="icon">&#9889;</div>
+        <h3>Automation Scripts</h3>
+        <p>Python & Node.js scripts that save hours of manual work. Data pipelines, scrapers, bots.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="container">
+    <h2>Featured Projects</h2>
+    <p class="section-desc">Real projects. Real results.</p>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-img" style="background:linear-gradient(135deg,#1e1e2f,#2d1b69)">&#127911;</div>
+        <div class="project-body">
+          <h3>AI Music Generator</h3>
+          <p>Generate Chinese songs from lyrics. Suno API + custom backend. Full pipeline from text to audio.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">AI API</span><span class="tag">Next.js</span></div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-img" style="background:linear-gradient(135deg,#16213e,#0f3460)">&#128722;</div>
+        <div class="project-body">
+          <h3>CXL Tech E-Commerce</h3>
+          <p>3C digital products store. Next.js + Supabase + Vercel. SEO-optimized, AI-powered product images.</p>
+          <div class="tags"><span class="tag">Next.js</span><span class="tag">Supabase</span><span class="tag">Tailwind</span><span class="tag">SEO</span></div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-img" style="background:linear-gradient(135deg,#1a1a2e,#533483)">&#128187;</div>
+        <div class="project-body">
+          <h3>Claude Code Automation Suite</h3>
+          <p>Multi-provider AI assistant setup with CCS. Custom skills, agent pipelines, automated workflows.</p>
+          <div class="tags"><span class="tag">Claude Code</span><span class="tag">CCS</span><span class="tag">AI Agents</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="container">
+    <h2>How I work</h2>
+    <p class="section-desc">Clear, fast, and collaborative.</p>
+    <div class="process-grid">
+      <div class="process-step">
+        <div class="num">01</div>
+        <h4>You tell me the idea</h4>
+        <p>Chat, call, or message. No jargon, just what you need built.</p>
+      </div>
+      <div class="process-step">
+        <div class="num">02</div>
+        <h4>I build it</h4>
+        <p>Rapid prototyping. You see progress daily, not weekly.</p>
+      </div>
+      <div class="process-step">
+        <div class="num">03</div>
+        <h4>You review</h4>
+        <p>Send feedback. I iterate fast.</p>
+      </div>
+      <div class="process-step">
+        <div class="num">04</div>
+        <h4>We ship</h4>
+        <p>Deploy to production. Your product is live.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <h2>Let's work together</h2>
+    <p class="section-desc">Got a project? Need a developer? Just want to brainstorm? Reach out.</p>
+    <a href="mailto:jucenice440@gmail.com" class="btn btn-primary">jucenice440@gmail.com</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 jucenice440-collab. Built with &hearts; and AI.</p>
+  </div>
+</footer>
+
+</body>
+</html>
