@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WireGuard VPN 搭建教程 — 家庭静态独享IP</title>
+  <meta name="description" content="最详细的 WireGuard VPN 自建教程。年费不到100块，获得家庭静态独享海外IP。一条命令搭建，手机扫码即连。">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff;
+      --surface: #f8f9fb;
+      --text: #1a1a2e;
+      --muted: #555;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --border: #e5e7eb;
+      --green: #16a34a;
+      --red: #dc2626;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky; top: 0; z-index: 10;
+    }
+    header .container { display: flex; align-items: center; gap: 16px; }
+    header a { color: var(--muted); text-decoration: none; font-size: 14px; }
+    header a:hover { color: var(--accent); }
+    .back { font-weight: 600; }
+
+    main { padding: 48px 0; }
+
+    h1 { font-size: 2.2rem; font-weight: 800; line-height: 1.3; margin-bottom: 8px; }
+    h1 span { color: var(--accent); }
+    .subtitle { font-size: 1.1rem; color: var(--muted); margin-bottom: 32px; }
+
+    /* Video player */
+    .video-wrapper {
+      position: relative; width: 100%; max-width: 400px; margin: 0 auto 48px;
+      border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      background: #000;
+    }
+    video { display: block; width: 100%; border-radius: 16px; }
+
+    /* Sections */
+    section { margin-bottom: 56px; }
+    h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: inline-block; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin: 24px 0 12px; }
+
+    .highlight-box {
+      background: var(--accent-light);
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 20px 0;
+    }
+    .highlight-box p { font-size: 1.05rem; }
+    .highlight-box strong { color: var(--accent); }
+
+    .compare {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;
+    }
+    .cmp {
+      padding: 24px; border-radius: 12px; text-align: center;
+    }
+    .cmp-bad { background: #fef2f2; border: 2px solid #fecaca; }
+    .cmp-good { background: #f0fdf4; border: 2px solid #bbf7d0; }
+    .cmp h4 { font-size: 1.1rem; margin-bottom: 8px; }
+    .cmp-bad h4 { color: var(--red); }
+    .cmp-good h4 { color: var(--green); }
+    .cmp p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+    code {
+      background: #1e1e2f; color: #e0e0e0; padding: 2px 8px;
+      border-radius: 4px; font-size: 0.9rem; font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    pre {
+      background: #1e1e2f; color: #e0e0e0; padding: 20px 24px;
+      border-radius: 10px; overflow-x: auto; font-size: 0.9rem;
+      line-height: 1.6; margin: 12px 0;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    pre .comment { color: #6a9955; }
+    pre .cmd { color: #61afef; }
+
+    ol.steps { padding-left: 24px; }
+    ol.steps li { margin-bottom: 16px; font-size: 1.05rem; }
+    ol.steps li strong { color: var(--accent); }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: 10px; font-size: 16px; font-weight: 600;
+      text-decoration: none; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 32px 0;
+      text-align: center; color: var(--muted); font-size: 0.85rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .compare { grid-template-columns: 1fr; }
+      h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <a href="/" class="back">&larr; 返回首页</a>
+    <span style="color:var(--muted)">|</span>
+    <span style="font-weight:600">WireGuard VPN 搭建教程</span>
+  </div>
+</header>
+
+<main class="container">
+
+  <h1>搭建你自己的 <span>WireGuard VPN</span></h1>
+  <p class="subtitle">家庭静态独享海外IP · 年费不到¥100 · 一条命令搞定</p>
+
+  <!-- Video -->
+  <div class="video-wrapper">
+    <video controls poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='711'%3E%3Crect fill='%231a1a2e' width='400' height='711'/%3E%3Ctext fill='%23ffffff' x='200' y='350' text-anchor='middle' font-size='18' font-family='sans-serif'%3EWireGuard VPN 教程%3C/text%3E%3C/svg%3E">
+      <source src="/vpn-tutorial.mp4" type="video/mp4">
+      你的浏览器不支持视频播放。
+    </video>
+  </div>
+
+  <!-- Why -->
+  <section id="why">
+    <h2>为什么选择自建 VPN？</h2>
+    <div class="compare">
+      <div class="cmp cmp-bad">
+        <h4>&#10060; 共享机场</h4>
+        <p>几十人挤一个IP<br/>随时被封 · 速度不稳<br/>被网站识别为代理</p>
+      </div>
+      <div class="cmp cmp-good">
+        <h4>&#9989; 自建 VPS</h4>
+        <p>家庭静态独享IP<br/>仅你一人使用<br/>不被墙识别 · 稳定高速</p>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <p><strong>核心卖点：</strong>自己搭建的 VPN 给你一个<strong>家庭静态独享 IP 地址</strong>，全世界只有你一个人在使用。不会被识别为机场节点，速度和稳定性都有保障。</p>
+    </div>
+  </section>
+
+  <!-- Steps -->
+  <section id="steps">
+    <h2>三步搭建</h2>
+    <ol class="steps">
+      <li>
+        <strong>买一台海外 VPS</strong><br/>
+        推荐 <a href="https://aaitr.com" target="_blank">aaitr.com</a> 静态家宽 VPS，最低配 $10/年。<br/>
+        系统选 Ubuntu 22.04 或 Debian 12。拿到 IP、用户名(root)、密码。
+      </li>
+      <li>
+        <strong>一键安装 WireGuard</strong><br/>
+        下载 <a href="https://hostbuf.com" target="_blank">FinalShell</a> 连上 VPS，然后复制下面命令：
+        <pre>curl -L https://raw.githubusercontent.com/angristan/wireguard-install/master/wireguard-install.sh | bash</pre>
+        按提示填：客户端名 iphone，端口 51820，DNS 选 Cloudflare。不到两分钟装好。
+      </li>
+      <li>
+        <strong>手机电脑扫码连接</strong><br/>
+        iPhone 装 WireGuard App，扫二维码导入配置。<br/>
+        Windows/Mac 装客户端，导入配置文件。打开开关即连通。
+      </li>
+    </ol>
+  </section>
+
+  <!-- Firewall -->
+  <section id="firewall">
+    <h2>防火墙配置</h2>
+    <pre><span class="comment"># 开放 WireGuard 端口</span>
+<span class="cmd">ufw allow 51820/udp</span>
+<span class="cmd">ufw allow 22/tcp</span>
+<span class="cmd">ufw enable</span>
+
+<span class="comment"># 验证运行状态</span>
+<span class="cmd">systemctl status wg-quick@wg0</span></pre>
+  </section>
+
+  <!-- iPhone -->
+  <section id="iphone">
+    <h2>iPhone 配置（二维码方式）</h2>
+    <pre><span class="comment"># 生成二维码</span>
+<span class="cmd">apt install qrencode -y</span>
+<span class="cmd">qrencode -t ansiutf8 < /root/iphone.conf</span></pre>
+    <p>手机打开 WireGuard App → 添加隧道 → 扫描二维码 → 连接。看到 VPN 图标即成功。</p>
+  </section>
+
+  <!-- Verify -->
+  <section id="verify">
+    <h2>验收</h2>
+    <ul style="list-style:none;padding:0">
+      <li style="padding:8px 0">&#9989; 开 VPN → 访问 google.com → 能打开</li>
+      <li style="padding:8px 0">&#9989; 关 VPN → 访问不了 → 确认走代理</li>
+      <li style="padding:8px 0">&#9989; YouTube 播放 4K 视频不卡顿</li>
+      <li style="padding:8px 0">&#9989; 测速 <a href="https://fast.com" target="_blank">fast.com</a> 延迟 &lt; 80ms</li>
+    </ul>
+  </section>
+
+  <a href="/" class="btn btn-primary">&larr; 返回首页</a>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 <a href="/">jucenice440-collab</a>. 自由使用，欢迎分享。</p>
+  </div>
+</footer>
+
+</body>
+</html>
